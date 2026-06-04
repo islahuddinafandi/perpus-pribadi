@@ -12,3 +12,48 @@ const { id } = Astro.params;
 const buku = await getBukuById(id);
 if (!buku) return Astro.redirect('/');
 ---
+<Layout title={buku.judul} description={buku.deskripsi}>
+
+  <a href="/" class="text-sm text-stone-400 hover:text-stone-700 mb-6 inline-flex items-center gap-1 transition-colors">
+    ← Kembali
+  </a>
+
+  <div class="bg-white rounded-2xl border border-stone-100 p-6 md:p-8 flex flex-col md:flex-row gap-8">
+
+    <!-- Cover -->
+    <div class="flex-shrink-0 flex flex-col items-center gap-3">
+      <img
+        src={buku.cover_url}
+        alt={`Cover ${buku.judul}`}
+        class="w-40 h-56 object-cover rounded-xl shadow-sm"
+        onerror="this.style.display='none'"
+      />
+      <StatusBadge status={buku.status} />
+    </div>
+
+    <!-- Info -->
+    <div class="flex-1 min-w-0">
+      <p class="text-xs text-stone-400 mb-1">{buku.kategori} · {buku.tahun_terbit}</p>
+      <h1 class="text-2xl font-semibold leading-snug mb-1">{buku.judul}</h1>
+      <p class="text-stone-500 mb-5">{buku.penulis}</p>
+      <p class="text-stone-600 leading-relaxed mb-6 text-sm">{buku.deskripsi}</p>
+
+      <dl class="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-4 text-sm">
+        <div>
+          <dt class="text-stone-400 text-xs">Penerbit</dt>
+          <dd class="font-medium">{buku.penerbit}</dd>
+        </div>
+        <div>
+          <dt class="text-stone-400 text-xs">Halaman</dt>
+          <dd class="font-medium">{buku.halaman} hlm</dd>
+        </div>
+        <div>
+          <dt class="text-stone-400 text-xs">Bahasa</dt>
+          <dd class="font-medium">{buku.bahasa}</dd>
+        </div>
+      </dl>
+    </div>
+
+  </div>
+
+</Layout>

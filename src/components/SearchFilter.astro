@@ -2,3 +2,28 @@
 export interface Props { kategori: string[] }
 const { kategori } = Astro.props;
 ---
+<div class="flex flex-col sm:flex-row gap-3 mb-8">
+
+  <div class="relative flex-1">
+    <span class="absolute inset-y-0 left-3 flex items-center text-stone-300 text-sm pointer-events-none">🔍</span>
+    <input
+      id="search-input"
+      type="search"
+      placeholder="Cari judul atau penulis..."
+      class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-stone-200 text-sm
+             focus:outline-none focus:ring-2 focus:ring-stone-300 bg-white"
+    />
+  </div>
+
+  <select
+    id="filter-kategori"
+    class="px-3 py-2.5 rounded-xl border border-stone-200 text-sm bg-white
+           focus:outline-none focus:ring-2 focus:ring-stone-300 min-w-[160px]"
+  >
+    <option value="">Semua kategori</option>
+    {kategori.map(k => <option value={k}>{k}</option>)}
+  </select>
+
+  <select
+    id="filter-status"
+    class="px-3 py-2.5 rounde

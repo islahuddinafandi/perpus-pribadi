@@ -1,0 +1,13 @@
+---
+import type { StatusBaca } from '../types/buku';
+export interface Props { status: StatusBaca }
+const { status } = Astro.props;
+
+const map: Record = {
+  'sudah-dibaca':  { label: '✓ Sudah dibaca',  class: 'bg-emerald-50 text-emerald-700' },
+  'sedang-dibaca': { label: '◎ Sedang dibaca', class: 'bg-blue-50 text-blue-700' },
+  'mau-dibaca':    { label: '○ Mau dibaca',    class: 'bg-stone-100 text-stone-500' },
+};
+const { label, class: cls } = map[status];
+---
+{label}

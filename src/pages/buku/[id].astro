@@ -1,0 +1,14 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import { getAllBuku, getBukuById } from '../../lib/googleSheets';
+
+export async function getStaticPaths() {
+  const list = await getAllBuku();
+  return list.map(b => ({ params: { id: b.id } }));
+}
+
+const { id } = Astro.params;
+const buku = await getBukuById(id);
+if (!buku) return Astro.redirect('/');
+---

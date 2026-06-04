@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BukuCard from '../components/BukuCard.astro';
+import StatRingkas from '../components/StatRingkas.astro';
+import SearchFilter from '../components/SearchFilter.astro';
+import { getAllBuku, getKategori } from '../lib/googleSheets';
+
+const buku     = await getAllBuku();
+const kategori = await getKategori();
+
+const sudah   = buku.filter(b => b.status === 'sudah-dibaca').length;
+const sedang  = buku.filter(b => b.status === 'sedang-dibaca').length;
+const mau     = buku.filter(b => b.status === 'mau-dibaca').length;
+---

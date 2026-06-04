@@ -1,0 +1,12 @@
+---
+import type { Buku } from '../types/buku';
+import StatusBadge from './StatusBadge.astro';
+export interface Props { buku: Buku }
+const { buku } = Astro.props;
+
+const ringBorder: Record = {
+  'sedang-dibaca': 'ring-2 ring-blue-200',
+  'sudah-dibaca':  '',
+  'mau-dibaca':    '',
+};
+---

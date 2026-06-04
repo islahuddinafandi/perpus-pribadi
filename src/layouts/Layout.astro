@@ -1,0 +1,10 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+const {
+  title,
+  description = 'Koleksi buku pribadi — catatan bacaan saya.'
+} = Astro.props;
+---

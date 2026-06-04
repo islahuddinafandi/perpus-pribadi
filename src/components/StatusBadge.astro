@@ -3,11 +3,11 @@ import type { StatusBaca } from '../types/buku';
 export interface Props { status: StatusBaca }
 const { status } = Astro.props;
 
-const map: Record = {
+const map: Record<StatusBaca, { label: string; class: string }> = {
   'sudah-dibaca':  { label: '✓ Sudah dibaca',  class: 'bg-emerald-50 text-emerald-700' },
   'sedang-dibaca': { label: '◎ Sedang dibaca', class: 'bg-blue-50 text-blue-700' },
   'mau-dibaca':    { label: '○ Mau dibaca',    class: 'bg-stone-100 text-stone-500' },
 };
 const { label, class: cls } = map[status];
 ---
-{label}
+<span class={`text-xs px-2.5 py-1 rounded-full font-medium ${cls}`}>{label}</span>

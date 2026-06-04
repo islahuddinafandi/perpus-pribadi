@@ -8,7 +8,78 @@ import { getAllBuku, getKategori } from '../lib/googleSheets';
 const buku     = await getAllBuku();
 const kategori = await getKategori();
 
-const sudah   = buku.filter(b => b.status === 'sudah-dibaca').length;
-const sedang  = buku.filter(b => b.status === 'sedang-dibaca').length;
-const mau     = buku.filter(b => b.status === 'mau-dibaca').length;
+const sudah  = buku.filter(b => b.status === 'sudah-dibaca').length;
+const sedang = buku.filter(b => b.status === 'sedang-dibaca').length;
+const mau    = buku.filter(b => b.status === 'mau-dibaca').length;
 ---
+
+<Layout title="Koleksi Buku">
+
+  <div class="mb-8">
+    <h1 class="text-2xl font-semibold mb-1">Koleksi Bukuku</h1>
+    <p class="text-stone-500 text-sm">Catatan buku yang sudah, sedang, dan ingin saya baca.</p>
+  </div>
+
+  <StatRingkas sudah={sudah} sedang={sedang} mau={mau} total={buku.length} />
+
+  <SearchFilter kategori={kategori} />
+
+  {sedang > 0 && (
+    <section class="mb-8">
+      <h2 class="text-sm font-medium text-stone-500 uppercase tracking-wide mb-3">Sedang dibaca</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="grid-sedang">
+        {buku.filter(b => b.status === 'sedang-dibaca').map(b => <BukuCard buku={b} />)}
+      </div>
+    </section>
+  )}
+
+  <section>
+    <h2 class="text-sm font-medium text-stone-500 uppercase tracking-wide mb-3">Semua koleksi</h2>
+    <div id="buku-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      {buku.map(b => <BukuCard buku={b} />)}
+    </div>
+    <p id="no-result" class="hidden text-center text-stone-400 py-16 text-sm">
+      Tidak ada buku yang cocok.
+    </p>
+  </section>
+
+</Layout>
+
+<script>
+const searchEl   = document.getElementById('search-input') as HTMLInputElement;
+const filterEl   = document.getElementById('filter-kategori') as HTMLSelectElement;
+const statusEl   = document.getElementById('filter-status') as HTMLSelectElement;
+const cards      = document.querySelectorAll<HTMLElement>('[data-card]');
+const noResult   = document.getElementById('no-result')!;
+const gridSedang = document.getElementById('grid-sedang');
+
+function applyFilter() {
+  const q   = searchEl.value.toLowerCase();
+  const kat = filterEl.value;
+  const sts = statusEl.value;
+  let visible = 0;
+
+  cards.forEach(card => {
+    const judul    = (card.dataset.judul   ?? '').toLowerCase();
+    const penulis  = (card.dataset.penulis ?? '').toLowerCase();
+    const kategori =  card.dataset.kategori ?? '';
+    const status   =  card.dataset.status   ?? '';
+    const match =
+      (judul.includes(q) || penulis.includes(q)) &&
+      (kat === '' || kategori === kat) &&
+      (sts === '' || status === sts);
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+
+  noResult.classList.toggle('hidden', visible > 0);
+  if (gridSedang) {
+    gridSedang.parentElement!.style.display =
+      (sts !== '' && sts !== 'sedang-dibaca') ? 'none' : '';
+  }
+}
+
+searchEl?.addEventListener('input', applyFilter);
+filterEl?.addEventListener('change', applyFilter);
+statusEl?.addEventListener('change', applyFilter);
+</script>

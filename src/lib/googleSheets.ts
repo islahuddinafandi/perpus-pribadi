@@ -4,16 +4,16 @@ const API_KEY    = import.meta.env.GOOGLE_SHEETS_API_KEY;
 const SHEET_ID   = import.meta.env.GOOGLE_SHEET_ID;
 const SHEET_NAME = import.meta.env.GOOGLE_SHEET_NAME || 'Sheet1';
 
-const URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+const SHEETS_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
 
-export async function getAllBuku(): Promise {
+export async function getAllBuku(): Promise<Buku[]> {
   try {
-    const res = await fetch(URL);
+    const res = await fetch(SHEETS_URL);
     if (!res.ok) throw new Error(`Sheets API error: ${res.status}`);
     const data = await res.json();
     const [headers, ...rows] = data.values as string[][];
     return rows.map((row) => {
-      const obj: Record = {};
+      const obj: Record<string, string> = {};
       headers.forEach((h, i) => { obj[h.trim()] = row[i] ?? ''; });
       return {
         id:           obj.id,
@@ -35,10 +35,10 @@ export async function getAllBuku(): Promise {
   }
 }
 
-export async function getBukuById(id: string): Promise {
+export async function getBukuById(id: string): Promise<Buku | undefined> {
   return (await getAllBuku()).find((b) => b.id === id);
 }
 
-export async function getKategori(): Promise {
+export async function getKategori(): Promise<string[]> {
   return [...new Set((await getAllBuku()).map((b) => b.kategori))].sort();
 }
